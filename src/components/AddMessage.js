@@ -1,10 +1,12 @@
 import React from 'react'
 import {Row, Input, Button} from 'react-materialize'
+import '../index.css'
 
 class AddMessage extends React.Component {
 
   constructor(props) {
     super(props)
+    this.state={messages: this.props.messages}
     this.submitHandler = this.submitHandler.bind(this)
   }
 
@@ -13,7 +15,7 @@ class AddMessage extends React.Component {
         const index = e.target.value
         if (index > 0) {
             const msgList = this.props.messages
-            const message=messages[index]
+            const message=msgList[index]
             const result = {'message':message}
             this.props.onSubmit(result)
         } else {
@@ -22,18 +24,14 @@ class AddMessage extends React.Component {
    }
 
   render() {
-      const msgList = this.props.messages
       return (
          <div>
+            <div>Add Message</div>
              <form onSubmit={this.submitHandler}>
                  <Row>
-	                 <Input s={12} type='select' defaultValue='0' name="message">
-	                      <option key='0' value='0'>Select a message</option>
-	                      {messages.map( (message, index) => <option key={index} value={index}>{message}</option> )}
-                     </Input>
-                     <Input type="subject" label="subject" name="subject" />
-                     <Input type="text" label="quantity" name="quantity" />
-                     <Button type="submit" label="submit" value="submit">Submit</Button>
+                         <Input type="subject" label="subject" name="subject" ></Input>
+                         <Input type="text" label="text" name="text" ></Input>
+                         <Button type="submit" label="submit" value="submit">Submit</Button>
                  </Row>
              </form>
          </div>
@@ -43,3 +41,7 @@ class AddMessage extends React.Component {
 }
 
 export default AddMessage;
+
+//	                 <Input s={12} type='select' defaultValue='0' name="message">
+//	                      <option key='0' value='0'>Select a message</option>
+//                   </Input>

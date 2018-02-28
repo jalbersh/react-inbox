@@ -1,4 +1,5 @@
 import React from 'react'
+import '../index.css'
 
 class Message extends React.Component {
     constructor(props) {
@@ -8,23 +9,16 @@ class Message extends React.Component {
 
     render() {
         const message = this.props.message
-        const star = message.star
-        const read = message.read
-        const labels = message.labels
-        const selected = message.selected
-        const subject = message.subject
         const text = message.text
+//        const star = message.star
+//        const unread = message.unread
+//        const labels = message.labels
+//        const selected = message.selected
+//        const subject = message.subject
         return (
-            <div className="collection-item">
+            <div className="message">
               <div className="row">
-                <div className="col s8">{selected}</div>
-                <div className="col s8">{star}</div>
-                <div className="collection">
-                    {
-                        labels.map( (label, index) => <div className="label">{label}</div> )
-                    }
-                </div>
-                <div>{text}</div>
+                <div className="message.body">{text}</div>
               </div>
             </div>
         )
@@ -32,3 +26,11 @@ class Message extends React.Component {
 }
 
 export default Message;
+
+//                <div className=".message.selected">{selected}</div>
+//                <div className="col s8">{star}</div>
+//                <div className="collection">
+//                    {
+//                        labels.map( (label, index) => <div className=".label">{label}</div> )
+//                    }
+//                </div>

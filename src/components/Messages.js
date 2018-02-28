@@ -1,4 +1,6 @@
 import React from 'react'
+import '../index.css'
+import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
 import Message from '../components/Message';
 import AddMessage from '../components/AddMessage';
 
@@ -7,6 +9,7 @@ class Messages extends React.Component {
         super(props);
         this.state={messages: this.props.messages}
         this.updateMessages = this.updateMessages.bind(this)
+        this.handleChange = this.handleChange.bind(this)
     }
 
     updateMessages (message) {
@@ -33,6 +36,8 @@ class Messages extends React.Component {
        this.setState({messages: newMessages})
     }
 
+    handleChange = (event, index, value) => this.setState({value});
+
     render() {
         const messages = this.state.messages
 
@@ -42,13 +47,18 @@ class Messages extends React.Component {
                 <div className="collection-item row grey lighten-3">
                   <div className="col s8">Message</div>
                 </div>
+              <Toolbar>
+                <ToolbarGroup firstChild={true}>
+                </ToolbarGroup>
+              </Toolbar>
                 <div className="collection">
                     {
-                        messages.map( (msg, index) => <Message key={ index } message={ msg } /> )
+                        messages ? messages.map( (msg, index) => <Message key={ index } message={ msg } /> ) : <div>no messages</div>
                     }
                 </div>
               </div>
-              <AddMessage onSubmit={ this.updateMessages } />
+              <AddMessage onSubmit={ this.updateMessages } messages={messages}
+              />
             </div>
         )
     }
