@@ -47,9 +47,7 @@ class Messages extends React.Component {
                 <div className="collection-item row grey lighten-3">
                   <div className="col s8">Message</div>
                 </div>
-              <Toolbar>
-                <ToolbarGroup firstChild={true}>
-                </ToolbarGroup>
+              <Toolbar className="toolbar">
               </Toolbar>
                 <div className="collection">
                     {
