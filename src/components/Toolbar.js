@@ -1,13 +1,5 @@
 import React from 'react'
 import '../index.css'
-import IconMenu from 'material-ui/IconMenu';
-import IconButton from 'material-ui/IconButton';
-import FontIcon from 'material-ui/FontIcon';
-import NavigationExpandMoreIcon from 'material-ui/svg-icons/navigation/expand-more';
-import MenuItem from 'material-ui/MenuItem';
-import DropDownMenu from 'material-ui/DropDownMenu';
-import RaisedButton from 'material-ui/RaisedButton';
-import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
 
 class Toolbar extends React.Component {
     constructor(props) {
@@ -16,35 +8,44 @@ class Toolbar extends React.Component {
 
     render() {
         return (
-              <Toolbar>
-                <ToolbarGroup firstChild={true}>
-                  <DropDownMenu value={this.state.value} onChange={this.handleChange}>
-                    <MenuItem value={1} primaryText="All Broadcasts" />
-                    <MenuItem value={2} primaryText="All Voice" />
-                    <MenuItem value={3} primaryText="All Text" />
-                    <MenuItem value={4} primaryText="Complete Voice" />
-                    <MenuItem value={5} primaryText="Complete Text" />
-                    <MenuItem value={6} primaryText="Active Voice" />
-                    <MenuItem value={7} primaryText="Active Text" />
-                  </DropDownMenu>
-                </ToolbarGroup>
-                <ToolbarGroup>
-                  <ToolbarTitle text="Options" />
-                  <FontIcon className="muidocs-icon-custom-sort" />
-                  <ToolbarSeparator />
-                  <RaisedButton label="Create Broadcast" primary={true} />
-                  <IconMenu
-                    iconButtonElement={
-                      <IconButton touch={true}>
-                        <NavigationExpandMoreIcon />
-                      </IconButton>
-                    }
-                  >
-                    <MenuItem primaryText="Download" />
-                    <MenuItem primaryText="More Info" />
-                  </IconMenu>
-                </ToolbarGroup>
-              </Toolbar>
+            <div className="row toolbar">
+              <div className="col-md-12">
+                <p className="pull-right">
+                  <span className="badge badge">2</span>
+                  unread messages
+                </p>
+
+                <a className="btn btn-danger">
+                  <i className="fa fa-plus"></i>
+                </a>
+
+                <button className="btn btn-default">
+                  <i className="fa fa-minus-square-o"></i>
+                </button>
+
+                <button className="btn btn-default">Mark As Read</button>
+
+                <button className="btn btn-default">Mark As Unread</button>
+
+                <select className="form-control label-select">
+                  <option>Apply label</option>
+                  <option value="dev">dev</option>
+                  <option value="personal">personal</option>
+                  <option value="gschool">gschool</option>
+                </select>
+
+                <select className="form-control label-select">
+                  <option>Remove label</option>
+                  <option value="dev">dev</option>
+                  <option value="personal">personal</option>
+                  <option value="gschool">gschool</option>
+                </select>
+
+                <button className="btn btn-default">
+                  <i className="fa fa-trash-o"></i>
+                </button>
+              </div>
+            </div>
         );
     }
 }

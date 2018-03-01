@@ -1,8 +1,8 @@
 import React from 'react'
 import '../index.css'
-import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
 import Message from '../components/Message';
 import AddMessage from '../components/AddMessage';
+import Toolbar from '../components/Toolbar'
 
 class Messages extends React.Component {
     constructor(props) {
@@ -47,14 +47,15 @@ class Messages extends React.Component {
                 <div className="collection-item row grey lighten-3">
                   <div className="col s8">Message</div>
                 </div>
-              <Toolbar className="toolbar">
-              </Toolbar>
+                <Toolbar />
                 <div className="collection">
                     {
                         messages ? messages.map( (msg, index) => <Message key={ index } message={ msg } /> ) : <div>no messages</div>
                     }
                 </div>
               </div>
+              <br />
+              <br />
               <AddMessage onSubmit={ this.updateMessages } messages={messages}
               />
             </div>
