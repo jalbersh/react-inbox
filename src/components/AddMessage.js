@@ -11,20 +11,24 @@ class AddMessage extends React.Component {
 
   submitHandler(e) {
         e.preventDefault()
-        const index = e.target.value
-        if (index > 0) {
-            const msgList = this.props.messages
-            const message=msgList[index]
-            const result = {'message':message}
-            this.props.onSubmit(result)
-        } else {
-            console.log('can\'t select default')
-        }
+        const target = e.target
+        console.log('submitHandler with',target.body.value,' and',target.subject.value)
+        const body = target.body.value
+        const subject = target.subject.value
+        const message = { 'labels': [],
+                          'selected': false,
+                          'unread': true,
+                          'star': false,
+                          'subject': subject,
+                          'text': body }
+        console.log('message=',message)
+        const result = {'message':message}
+        this.props.onSubmit(result)
    }
 
   render() {
       return (
-        <form className="form-horizontal well">
+        <form className="form-horizontal well" onSubmit={this.submitHandler}>
           <div className="form-group">
             <div className="col-sm-8 col-sm-offset-2">
               <h4>Add Message</h4>
