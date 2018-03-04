@@ -7,7 +7,6 @@ class Message extends React.Component {
         this.state={message: props.message}
         this.selectOnCheck = this.selectOnCheck.bind(this)
         this.selectStar = this.selectStar.bind(this)
-        this.handleChange = this.handleChange.bind(this)
     }
 
     selectOnCheck(e) {
@@ -17,10 +16,10 @@ class Message extends React.Component {
         let message = this.state.message
         if (checked === 'on') {
             message.selected = true
-            message.checked = 'checked'
+            message.checked = 'on'
         } else {
             message.selected = false
-            message.checked = 'unchecked'
+            message.checked = 'off'
         }
         this.setState({message: message})
         this.props.updateMessages(message)
@@ -28,7 +27,11 @@ class Message extends React.Component {
 
     selectStar(e) {
         e.preventDefault()
-        const checked = e.target.value
+        const target = e.target
+        console.log('target',target)
+        const index = target.message
+        console.log('index',index)
+        const checked = true
         console.log('Message.selectStar with checked',checked)
         let message = this.state.message
         if (checked === 'on') {
@@ -40,26 +43,23 @@ class Message extends React.Component {
         this.props.updateMessages(message)
     }
 
-    handleChange = (event, index, value) => {
-        console.log('in Message.handleChange with ',value)
-        this.setState({value});
-    }
-
     render() {
-        const message = this.props.message
+        const message = this.state.message
         const text = message.text
+        const checked = message.checked
         const star = message.star === true ? 'star fa fa-star' : 'star fa fa-star-o'
-        const unread = message.unread === true ? 'unread' : 'read'
+        const unread = message.unread === true ? 'message.unread' : 'message.read'
         const labels = message.labels ? message.labels : []
-        const selected = message.selected
-        if (selected===true) {
+        const selected = message.selected === true ? 'message.select' : 'message'
+        const className = 'row'+{selected}+{unread}
+        if (checked==='on') {
             return (
-                <div className="row message.select {unread}">
+                <div className={className}>
                       <div className="col-xs-2">
-                            <input type="checkbox" checked onChange={this.selectOnCheck}/>
+                            <input type="checkbox" checked={checked} onChange={this.selectOnCheck}/>
                       </div>
                       <div className="col-xs-2">
-                        <i className={star} onChange={this.selectStar}></i>
+                        <i className={star} onClick={this.selectStar}></i>
                       </div>
                       <div className="collection">
                         {
@@ -71,12 +71,12 @@ class Message extends React.Component {
             )
         } else {
             return (
-                <div className="row message {unread}">
+                <div className={className}>
                       <div className="col-xs-2">
-                            <input type="checkbox" unchecked onChange={this.selectOnCheck}/>
+                            <input type="checkbox" onChange={this.selectOnCheck}/>
                       </div>
                       <div className="col-xs-2">
-                        <i className={star}></i>
+                        <i className={star} onClick={this.selectStar}></i>
                       </div>
                       <div className="collection">
                         {

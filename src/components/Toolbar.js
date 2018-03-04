@@ -39,7 +39,7 @@ class Toolbar extends React.Component {
 
     applyLabels(e) {
         e.preventDefault()
-        let messages = this.props.messages
+        let messages = this.state.messages
         const label = e.target.value
         messages = this.state.messages.map(function(message) {
                     if (message.selected === true) {
@@ -53,7 +53,7 @@ class Toolbar extends React.Component {
 
     deleteSelected(e) {
         e.preventDefault()
-        let messages = this.props.messages
+        let messages = this.state.messages
         messages = this.state.messages.filter(function(message) {
                     return message.selected !== true
                 })
@@ -63,7 +63,7 @@ class Toolbar extends React.Component {
 
     markUnread(e) {
         e.preventDefault()
-        let messages = this.props.messages
+        let messages = this.state.messages
         messages = this.state.messages.filter(function(message) {
                     if (message.selected === true) {
                         message.unread = true
@@ -76,7 +76,7 @@ class Toolbar extends React.Component {
 
     markRead(e) {
         e.preventDefault()
-        let messages = this.props.messages
+        let messages = this.state.messages
         messages = this.state.messages.filter(function(message) {
              if (message.selected === true) {
                  message.unread = false
@@ -88,7 +88,7 @@ class Toolbar extends React.Component {
     }
 
     countUnread() {
-        let messages = this.props.messages
+        let messages = this.state.messages
         var count = messages.reduce(function(count, message) {
             return message.unread === true ? count+1 : count
         }, 0);

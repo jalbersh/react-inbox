@@ -14,7 +14,7 @@ class Messages extends React.Component {
     }
 
     updateMessages (message) {
-       let curMessages = this.props.messages
+       let curMessages = this.state.messages
        let msgToFind = curMessages.find((msg) => {
         return msg === message
        })
