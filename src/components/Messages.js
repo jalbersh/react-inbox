@@ -10,15 +10,14 @@ class Messages extends React.Component {
         this.state={messages: this.props.messages}
         this.updateMessages = this.updateMessages.bind(this)
         this.handleChange = this.handleChange.bind(this)
+        this.changeMessages = this.changeMessages.bind(this)
     }
 
     updateMessages (message) {
-       let curMessages = this.state.messages
-
+       let curMessages = this.props.messages
        let msgToFind = curMessages.find((msg) => {
         return msg === message
        })
-
        let newMessages = []
        if (msgToFind) {
            let msgIndex = curMessages.indexOf(msgToFind)
@@ -32,11 +31,19 @@ class Messages extends React.Component {
                 ...curMessages, message
            ]
        }
-
+       console.log('updateMessages calling setState with newMessages=',newMessages)
        this.setState({messages: newMessages})
     }
 
-    handleChange = (event, index, value) => this.setState({value});
+    changeMessages(newMessages) {
+        console.log('in changeMessages with',newMessages)
+        this.setState({messages: newMessages})
+    }
+
+    handleChange = (event, index, value) => {
+        console.log('in Messages.handleChange with ',value)
+        this.setState({value});
+    }
 
     render() {
         const messages = this.state.messages
@@ -47,10 +54,10 @@ class Messages extends React.Component {
                 <div className="collection-item row grey lighten-3">
                   <div className="col s8">Message</div>
                 </div>
-                <Toolbar />
+                <Toolbar messages={messages} changeMessages={ this.changeMessages } updateMessages={ this.updateMessages } />
                 <div className="collection">
                     {
-                        messages ? messages.map( (msg, index) => <Message key={ index } message={ msg } /> ) : <div>no messages</div>
+                        messages ? messages.map( (msg, index) => <Message key={ index } message={ msg } updateMessages={ this.updateMessages } /> ) : <div>no messages</div>
                     }
                 </div>
               </div>

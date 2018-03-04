@@ -16,14 +16,14 @@ class AddMessage extends React.Component {
         const body = target.body.value
         const subject = target.subject.value
         const message = { 'labels': [],
+                          'checked': 'off',
                           'selected': false,
                           'unread': true,
                           'star': false,
                           'subject': subject,
                           'text': body }
-        console.log('message=',message)
-        const result = {'message':message}
-        this.props.onSubmit(result)
+        console.log('submitHandler message=',message)
+        this.props.onSubmit(message)
    }
 
   render() {
@@ -35,15 +35,15 @@ class AddMessage extends React.Component {
             </div>
           </div>
           <div className="form-group">
-            <label for="subject" className="col-sm-2 control-label">Subject</label>
+            <label htmlFor="subject" className="col-sm-2 control-label">Subject</label>
             <div className="col-sm-8">
-              <input type="text" className="form-control" id="subject" placeholder="Enter a subject" name="subject" />
+              <input label="subject" type="text" className="form-control" id="subject" placeholder="Enter a subject" name="subject" />
             </div>
           </div>
           <div className="form-group">
-            <label for="body" className="col-sm-2 control-label">Body</label>
+            <label htmlFor="body" className="col-sm-2 control-label">Body</label>
             <div className="col-sm-8">
-              <textarea name="body" id="body" className="form-control"></textarea>
+              <textarea label="body" name="body" id="body" className="form-control" placeholder="Enter the body of the email"></textarea>
             </div>
           </div>
           <div className="form-group">
@@ -58,6 +58,7 @@ class AddMessage extends React.Component {
 }
 
 export default AddMessage;
+
 
 //	                 <Input s={12} type='select' defaultValue='0' name="message">
 //	                      <option key='0' value='0'>Select a message</option>
