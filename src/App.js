@@ -45,7 +45,7 @@ class App extends Component {
     }
 
   render() {
-    const messages = this.props.messages
+    const messages = this.state.messages
     return (
         <Messages messages={messages} selectStar={this.selectStar} selectCheck={this.selectCheck} updateMessages={this.updateMessages}/>
     );
@@ -54,7 +54,3 @@ class App extends Component {
 
 export default App;
 
-//        <header className="App-header">
-//          <img src={logo} className="App-logo" alt="logo" />
-//          <h1 className="App-title">Welcome to React</h1>
-//        </header>

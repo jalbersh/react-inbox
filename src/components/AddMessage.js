@@ -30,9 +30,7 @@ class AddMessage extends React.Component {
       return (
         <form className="form-horizontal well" onSubmit={this.submitHandler}>
           <div className="form-group">
-            <div className="col-sm-8 col-sm-offset-2">
-              <h4>Add Message</h4>
-            </div>
+            <div className="col-sm-8 col-sm-offset-2"><h4>Add Message</h4></div>
           </div>
           <div className="form-group">
             <label htmlFor="subject" className="col-sm-2 control-label">Subject</label>
@@ -59,7 +57,3 @@ class AddMessage extends React.Component {
 
 export default AddMessage;
 
-
-//	                 <Input s={12} type='select' defaultValue='0' name="message">
-//	                      <option key='0' value='0'>Select a message</option>
-//                   </Input>
