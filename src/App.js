@@ -47,9 +47,7 @@ class App extends Component {
   render() {
     const messages = this.props.messages
     return (
-      <div className="App">
         <Messages messages={messages} selectStar={this.selectStar} selectCheck={this.selectCheck} updateMessages={this.updateMessages}/>
-      </div>
     );
   }
 }

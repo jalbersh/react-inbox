@@ -25,7 +25,7 @@ class Message extends React.Component {
         const star = !!message.star ? 'fa-star' : 'fa-star-o'
         const unread = !!message.unread ? 'unread' : 'read'
         const labels = message.labels ? message.labels : []
-        const selected = !!message.selected ? 'message select' : 'message'
+        const selected = !!message.selected ? 'message selected' : 'message'
             return (
                 <div className={`row ${selected} ${unread}`}>
                       <div className="col-xs-2">
