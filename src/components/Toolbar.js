@@ -103,34 +103,29 @@ class Toolbar extends React.Component {
 
     countUnread() {
         let messages = this.state.messages
-        console.log('countUnread',messages)
         var count = messages.reduce(function(count, message) {
             return !!message.unread ? count+1 : count
         }, 0);
-        console.log('count returning',count)
         return count
     }
 
     countNumSelected() {
         let messages = this.state.messages
-        console.log('countUnread',messages)
         var count = messages.reduce(function(count, message) {
             return !!message.selected ? count+1 : count
         }, 0);
-        console.log('count returning',count)
         return count
     }
 
     render() {
-        const count = this.countNumSelected()
-        const msgCount = this.state.messages ? this.state.messages.length : 0
-        const disabled = count && count === msgCount ? 'disabled' : ''
-        console.log('in Toolbar.render comparing',count,msgCount)
+        const countSelected = this.countNumSelected()
+        const countUnread = this.countUnread()
+        const disabled = countSelected>0 ? '' : 'disabled'
         return (
             <div className="row toolbar">
               <div className="col-md-12">
                 <p className="pull-right">
-                  <span className="badge badge">{count}</span>
+                  <span className="badge badge">{countUnread}</span>
                   unread messages
                 </p>
                 <button className="btn btn-default" onClick={this.selectAll}><i className="fa fa-check-square-o"></i></button>
