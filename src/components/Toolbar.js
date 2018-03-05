@@ -12,6 +12,7 @@ class Toolbar extends React.Component {
         this.markRead = this.markRead.bind(this)
         this.countUnread = this.countUnread.bind(this)
         this.selectAll = this.selectAll.bind(this)
+        this.countNumSelected = this.countNumSelected.bind(this)
     }
 
     removeLabels(e) {
@@ -110,8 +111,18 @@ class Toolbar extends React.Component {
         return count
     }
 
+    countNumSelected() {
+        let messages = this.state.messages
+        console.log('countUnread',messages)
+        var count = messages.reduce(function(count, message) {
+            return !!message.selected ? count+1 : count
+        }, 0);
+        console.log('count returning',count)
+        return count
+    }
+
     render() {
-        const count = this.countUnread()
+        const count = this.countNumSelected()
         const msgCount = this.state.messages ? this.state.messages.length : 0
         const disabled = count && count === msgCount ? 'disabled' : ''
         console.log('in Toolbar.render comparing',count,msgCount)
