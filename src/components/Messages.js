@@ -8,31 +8,8 @@ class Messages extends React.Component {
     constructor(props) {
         super(props);
         this.state={messages: this.props.messages}
-        this.updateMessages = this.updateMessages.bind(this)
         this.handleChange = this.handleChange.bind(this)
         this.changeMessages = this.changeMessages.bind(this)
-    }
-
-    updateMessages (message) {
-       let curMessages = this.state.messages
-       let msgToFind = curMessages.find((msg) => {
-        return msg === message
-       })
-       let newMessages = []
-       if (msgToFind) {
-           let msgIndex = curMessages.indexOf(msgToFind)
-           newMessages = [
-                ...curMessages.slice(0, msgIndex),
-                message,
-                ...curMessages.slice(msgIndex + 1)
-           ]
-       } else {
-           newMessages = [
-                ...curMessages, message
-           ]
-       }
-       console.log('updateMessages calling setState with newMessages=',newMessages)
-       this.setState({messages: newMessages})
     }
 
     changeMessages(newMessages) {
@@ -51,19 +28,16 @@ class Messages extends React.Component {
         return (
             <div>
               <div className="container">
-                <div className="collection-item row grey lighten-3">
-                  <div className="col s8">Message</div>
-                </div>
                 <Toolbar messages={messages} changeMessages={ this.changeMessages } updateMessages={ this.updateMessages } />
                 <div className="collection">
                     {
-                        messages ? messages.map( (msg, index) => <Message key={ index } message={ msg } updateMessages={ this.updateMessages } /> ) : <div>no messages</div>
+                        messages ? messages.map( (msg, index) => <Message key={ index } message={ msg } updateMessages={ this.props.updateMessages } selectStar={this.props.selectStar} selectCheck={this.props.selectCheck} /> ) : <div>no messages</div>
                     }
                 </div>
               </div>
               <br />
               <br />
-              <AddMessage onSubmit={ this.updateMessages } messages={messages}
+              <AddMessage onSubmit={ this.props.updateMessages } messages={messages}
               />
             </div>
         )

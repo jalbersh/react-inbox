@@ -96,7 +96,6 @@ class Toolbar extends React.Component {
     }
 
     render() {
-        console.log('Toolbar.render')
         const count = this.countUnread()
         return (
             <div className="row toolbar">
@@ -106,7 +105,7 @@ class Toolbar extends React.Component {
                   unread messages
                 </p>
                 <button className="btn btn-default">
-                  <i className="fa fa-minus-square-o"></i>
+                  <i className="fa fa-check-square-o"></i>
                 </button>
                 <button className="btn btn-default" onClick={this.markRead}>Mark As Read</button>
                 <button className="btn btn-default" onClick={this.markUnread}>Mark As Unread</button>
