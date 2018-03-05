@@ -28,11 +28,9 @@ class Messages extends React.Component {
         return (
             <div className="container">
                 <Toolbar messages={messages} changeMessages={ this.changeMessages } updateMessages={ this.updateMessages } />
-                <div className="collection">
                     {
                         messages ? messages.map( (msg, index) => <Message key={ index } message={ msg } updateMessages={ this.props.updateMessages } selectStar={this.props.selectStar} selectCheck={this.props.selectCheck} /> ) : <div>no messages</div>
                     }
-                </div>
               <br />
               <br />
               <AddMessage onSubmit={ this.props.updateMessages } messages={messages}

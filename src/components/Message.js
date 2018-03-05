@@ -27,19 +27,21 @@ class Message extends React.Component {
         const labels = message.labels ? message.labels : []
         const selected = !!message.selected ? 'message selected' : 'message'
             return (
-                <div className={`row ${selected} ${unread}`}>
-                      <div className="col-xs-2">
-                            <input type="checkbox" checked={ !!message.selected } onChange={this.checkMessage}/>
+                <div className={`row ${unread} ${selected}`}>
+                      <div className="col-xs-1">
+                          <div className="col-xs-2">
+                              <input type="checkbox" checked={ !!message.selected } onChange={this.checkMessage}/>
+                          </div>
+                          <div className="col-xs-2" onClick={this.starMessage}>
+                              <i className={`star fa ${star}`} ></i>
+                          </div>
                       </div>
-                      <div className="col-xs-2" onClick={this.starMessage}>
-                        <i className={`star fa ${star}`} ></i>
-                      </div>
-                      <div className="collection">
+                      <div className="col-xs-11">
                         {
                             labels.map( (label, index) => <span key={index} className="label label-warning">{label}</span> )
                         }
+                        <span>{text}</span>
                       </div>
-                      <div className="message-body">{text}</div>
                 </div>
             )
     }
