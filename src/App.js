@@ -9,6 +9,12 @@ class App extends Component {
         this.selectStar = this.selectStar.bind(this)
         this.selectCheck = this.selectCheck.bind(this)
         this.updateMessages = this.updateMessages.bind(this)
+        this.changeMessages = this.changeMessages.bind(this)
+    }
+
+    changeMessages(newMessages) {
+        console.log('in changeMessages with',newMessages)
+        this.setState({messages: newMessages})
     }
 
     updateMessages (message) {
@@ -45,10 +51,10 @@ class App extends Component {
     }
 
   render() {
-    const messages = this.state.messages
-    return (
-        <Messages messages={messages} selectStar={this.selectStar} selectCheck={this.selectCheck} updateMessages={this.updateMessages}/>
-    );
+      const messages = this.state.messages
+      return (
+          <Messages messages={messages} selectStar={this.selectStar} selectCheck={this.selectCheck} updateMessages={this.updateMessages} changeMessages={this.changeMessages}/>
+      );
   }
 }
 

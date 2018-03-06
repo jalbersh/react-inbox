@@ -12,9 +12,9 @@ class AddMessage extends React.Component {
   submitHandler(e) {
         e.preventDefault()
         const target = e.target
-        console.log('submitHandler with',target.body.value,' and',target.subject.value)
         const body = target.body.value
         const subject = target.subject.value
+        e.target.reset()
         const message = { 'labels': [],
                           'checked': 'off',
                           'selected': false,

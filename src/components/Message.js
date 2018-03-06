@@ -21,7 +21,7 @@ class Message extends React.Component {
 
     render() {
         const message = this.state.message
-        const text = message.text
+        const subject = message.subject
         const star = !!message.star ? 'fa-star' : 'fa-star-o'
         const unread = !!message.unread ? 'unread' : 'read'
         const labels = message.labels ? message.labels : []
@@ -40,7 +40,7 @@ class Message extends React.Component {
                         {
                             labels.map( (label, index) => <span key={index} className="label label-warning">{label}</span> )
                         }
-                        <span>{text}</span>
+                        <span>{subject}</span>
                       </div>
                 </div>
             )

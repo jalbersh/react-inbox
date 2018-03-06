@@ -9,12 +9,6 @@ class Messages extends React.Component {
         super(props);
         this.state={messages: this.props.messages}
         this.handleChange = this.handleChange.bind(this)
-        this.changeMessages = this.changeMessages.bind(this)
-    }
-
-    changeMessages(newMessages) {
-        console.log('in changeMessages with',newMessages)
-        this.setState({messages: newMessages})
     }
 
     handleChange = (event, index, value) => {
@@ -23,18 +17,17 @@ class Messages extends React.Component {
     }
 
     render() {
-        const messages = this.state.messages
+        const messages = this.props.messages
 
         return (
             <div className="container">
-                <Toolbar messages={messages} changeMessages={ this.changeMessages } updateMessages={ this.updateMessages } />
+                <Toolbar messages={messages} changeMessages={ this.props.changeMessages } updateMessages={ this.props.updateMessages } />
                     {
                         messages ? messages.map( (msg, index) => <Message key={ index } message={ msg } updateMessages={ this.props.updateMessages } selectStar={this.props.selectStar} selectCheck={this.props.selectCheck} /> ) : <div>no messages</div>
                     }
               <br />
               <br />
-              <AddMessage onSubmit={ this.props.updateMessages } messages={messages}
-              />
+              <AddMessage messages={messages} onSubmit={ this.props.updateMessages } />
             </div>
         )
     }

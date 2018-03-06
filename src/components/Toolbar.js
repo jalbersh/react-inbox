@@ -101,16 +101,14 @@ class Toolbar extends React.Component {
         this.props.changeMessages(messages)
     }
 
-    countUnread() {
-        let messages = this.state.messages
+    countUnread(messages) {
         var count = messages.reduce(function(count, message) {
             return !!message.unread ? count+1 : count
         }, 0);
         return count
     }
 
-    countNumSelected() {
-        let messages = this.state.messages
+    countNumSelected(messages) {
         var count = messages.reduce(function(count, message) {
             return !!message.selected ? count+1 : count
         }, 0);
@@ -118,8 +116,11 @@ class Toolbar extends React.Component {
     }
 
     render() {
-        const countSelected = this.countNumSelected()
-        const countUnread = this.countUnread()
+        const messages = this.props.messages
+        const countSelected = this.countNumSelected(messages)
+        const countUnread = this.countUnread(messages)
+        const countMessages = messages ? messages.length : 0
+        const square = countSelected === countMessages ? 'fa-check-square-o' : countSelected === 0 ? 'fa-square-o' : 'indeterminate fa-square-o'
         const disabled = countSelected>0 ? '' : 'disabled'
         return (
             <div className="row toolbar">
@@ -128,7 +129,7 @@ class Toolbar extends React.Component {
                   <span className="badge badge">{countUnread}</span>
                   unread messages
                 </p>
-                <button className="btn btn-default" onClick={this.selectAll}><i className="fa fa-check-square-o"></i></button>
+                <button className="btn btn-default" onClick={this.selectAll}><i className={`fa ${square}`}></i></button>
                 <button className={`btn btn-default ${disabled}`} onClick={this.markRead}>Mark As Read</button>
                 <button className={`btn btn-default ${disabled}`} onClick={this.markUnread}>Mark As Unread</button>
                 <select className="form-control label-select" onChange={this.applyLabels} >
