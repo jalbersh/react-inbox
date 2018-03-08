@@ -11,16 +11,16 @@ class Message extends React.Component {
 
     checkMessage(e) {
         e.stopPropagation()
-        this.props.selectCheck(this.state.message)
+        this.props.selectCheck(this.props.message)
     }
 
     starMessage (e) {
         e.stopPropagation()
-        this.props.selectStar(this.state.message)
+        this.props.selectStar(this.props.message)
     }
 
     render() {
-        const message = this.state.message
+        const message = this.props.message
         const subject = message.subject
         const star = !!message.star ? 'fa-star' : 'fa-star-o'
         const unread = !!message.unread ? 'unread' : 'read'

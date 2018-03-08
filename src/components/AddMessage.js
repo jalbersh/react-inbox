@@ -22,7 +22,6 @@ class AddMessage extends React.Component {
                           'star': false,
                           'subject': subject,
                           'text': body }
-        console.log('submitHandler message=',message)
         this.props.onSubmit(message)
    }
 
