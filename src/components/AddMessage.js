@@ -1,5 +1,6 @@
 import React from 'react'
 import '../index.css'
+import commands from '../commands'
 
 class AddMessage extends React.Component {
 
@@ -18,11 +19,11 @@ class AddMessage extends React.Component {
         const message = { 'labels': [],
                           'checked': 'off',
                           'selected': false,
-                          'unread': true,
-                          'star': false,
+                          'read': false,
+                          'starred': false,
                           'subject': subject,
-                          'text': body }
-        this.props.onSubmit(message)
+                          'body': body }
+        this.props.onSubmit(message,commands.ADD)
    }
 
   render() {

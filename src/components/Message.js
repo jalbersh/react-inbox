@@ -21,9 +21,10 @@ class Message extends React.Component {
 
     render() {
         const message = this.props.message
+//        console.log('in Message.render',message)
         const subject = message.subject
-        const star = !!message.star ? 'fa-star' : 'fa-star-o'
-        const unread = !!message.unread ? 'unread' : 'read'
+        const star = !!message.starred ? 'fa-star' : 'fa-star-o'
+        const unread = !message.read ? 'unread' : 'read'
         const labels = message.labels ? message.labels : []
         const selected = !!message.selected ? 'message selected' : 'message'
             return (

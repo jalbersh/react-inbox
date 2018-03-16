@@ -27,7 +27,7 @@ class Toolbar extends React.Component {
 
     countUnread(messages) {
         var count = messages.reduce(function(count, message) {
-            return !!message.unread ? count+1 : count
+            return !message.read ? count+1 : count
         }, 0);
         return count
     }
