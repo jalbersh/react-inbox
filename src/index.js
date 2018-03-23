@@ -1,11 +1,3 @@
-//import registerServiceWorker from './registerServiceWorker';
-
-
-//ReactDOM.render(<App messages={messages} />, document.getElementById('root'));
-//registerServiceWorker();
-
-//****************
-
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/css/bootstrap-theme.css';
@@ -15,6 +7,7 @@ import App from './App';
 import ReactDOM from 'react-dom';
 import store from './store';
 import { Provider } from 'react-redux';
+import registerServiceWorker from './registerServiceWorker'
 
     const messages = [
     //  { labels: [], checked: 'off', selected: false, read: true, starred: false, text: 'subj1', subject: 'When a user views the app' },
@@ -31,4 +24,6 @@ ReactDOM.render(
         <App messages={messages} />
       </Provider>,
       document.getElementById('root')
-);
+)
+registerServiceWorker()
+;

@@ -89,6 +89,7 @@ class App extends Component {
        {
             store.dispatch(updateMessagesInAPI([message],command,message.starred))
        }
+       // need to do setState since selected is not part of the API, but for display purposes
        this.setState({messages: newMessages})
     }
 
@@ -113,7 +114,7 @@ class App extends Component {
                     }
                     return message
                 })
-        this.setState({messages: messages});
+//        this.setState({messages: messages});
     }
 
     removeLabels(e) {
@@ -223,6 +224,19 @@ class App extends Component {
                 addMessageInAPI,fetchMessagesInAPI,updateMessagesInAPI
             }, dispatch)
     }
+
+//    const mapDispatchToProps = dispatch => {
+//        addMessageInAPI: dispatch({message}),
+//        fetchMessagesInAPI: dispatch(),
+//        updateMessagesInAPI: dispatch({messages, command, value})
+//    }
+
+
+//    const mapDispatchToProps = dispatch => {
+//        addMessageInAPI: dispatch(addMessageInAPI({message})),
+//        fetchMessagesInAPI: dispatch(fetchMesssagesInApi()),
+//        updateMessagesInAPI: dispatch(updateMessagesInAPI({messages, command, value}))
+//    }
 
 export default connect(
   mapStateToProps,
