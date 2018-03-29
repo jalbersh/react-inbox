@@ -14,7 +14,7 @@ class Messages extends React.Component {
         const messages = this.props.messages
         return (
             <div className="container">
-                <Toolbar commands={this.state.commands} messages={messages} markRead={this.props.markRead} markUnread={this.props.markUnread} countNumSelected={this.props.countNumSelected} applyLabels={this.props.applyLabels} removeLabels={this.props.removeLabels} selectAll={this.props.selectAll} deleteSelected={this.props.deleteSelected} changeMessages={ this.props.changeMessages } updateMessages={ this.props.updateMessages } />
+                <Toolbar commands={this.state.commands} messages={messages} markRead={this.props.markRead} markUnread={this.props.markUnread} countNumSelected={this.props.countNumSelected} applyLabels={this.props.applyLabels} removeLabels={this.props.removeLabels} selectAll={this.props.selectAll} deleteSelected={this.props.deleteSelected} updateMessages={ this.props.updateMessages } />
                     {
                         messages && messages.length>0 ? messages.map( (msg, index) => <Message key={ index } message={ msg } updateMessages={ this.props.updateMessages } selectStar={this.props.selectStar} selectCheck={this.props.selectCheck} /> ) : <div>no messages</div>
                     }

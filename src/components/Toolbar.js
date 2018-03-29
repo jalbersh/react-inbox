@@ -10,11 +10,6 @@ class Toolbar extends React.Component {
         this.markAsRead = this.markAsRead.bind(this)
     }
 
-    deleteChecked(e) {
-        e.stopPropagation()
-        this.props.deleteSelected()
-    }
-
     markAsRead(e) {
         e.stopPropagation()
         this.props.markRead()

@@ -14,7 +14,6 @@ class App extends Component {
         this.selectStar = this.selectStar.bind(this)
         this.selectCheck = this.selectCheck.bind(this)
         this.updateMessages = this.updateMessages.bind(this)
-        this.changeMessages = this.changeMessages.bind(this)
         this.deleteSelected = this.deleteSelected.bind(this)
         this.selectAll = this.selectAll.bind(this)
         this.countNumSelected = this.countNumSelected.bind(this)
@@ -27,7 +26,6 @@ class App extends Component {
     }
 
     async componentDidMount() {
-//        console.log('in Messages.componentDidMount')
         store.dispatch(fetchMessagesInAPI())
 //        const messages = this.props.messages
 //        this.setState({messages: messages})
@@ -56,14 +54,8 @@ class App extends Component {
            return newMessage
     }
 
-    changeMessages(newMessages) {
-        console.log('in changeMessages with',newMessages)
-        //this.setState({messages: newMessages})
-    }
-
     updateMessages (message, command) {
        let curMessages = this.props.messages
-//       console.log('in App.updateMessages with',message)
        let msgToFind = curMessages.find((msg) => {
            return msg === message
        })
@@ -114,7 +106,7 @@ class App extends Component {
                     }
                     return message
                 })
-//        this.setState({messages: messages});
+        this.setState({messages: messages});
     }
 
     removeLabels(e) {
@@ -138,7 +130,6 @@ class App extends Component {
                     }
                     return message
                 },this)
-        //this.setState({messages: newMessages});
     }
 
     applyLabels(e) {
@@ -151,7 +142,6 @@ class App extends Component {
                     }
                     return message
                 },this)
-        //this.setState({messages: newMessages});
     }
 
     deleteSelected() {
@@ -164,11 +154,9 @@ class App extends Component {
                 store.dispatch(updateMessagesInAPI([message],commands.DELETE))
                 return false
             }
-//            return !message.selected;
             return true
 
         }, this)
-        //this.setState({messages: newMessages});
     }
 
     selectStar(message) {
@@ -190,7 +178,6 @@ class App extends Component {
                     }
                     return message
                 },this)
-        //this.setState({messages: newMessages});
     }
 
     markRead() {
@@ -201,13 +188,12 @@ class App extends Component {
              }
              return message
         },this)
-        //this.setState({messages: newMessages});
     }
 
     render() {
         const messages = this.props.messages
         return (
-            <Messages commands={this.state.commands} messages={messages} markRead={this.markRead} markUnread={this.markUnread} removeLabels={this.removeLabels} applyLabels={this.applyLabels} selectAll={this.selectAll} deleteSelected={this.deleteSelected} countNumSelected={this.countNumSelected} selectStar={this.selectStar} selectCheck={this.selectCheck} updateMessages={this.updateMessages} changeMessages={this.changeMessages}/>
+            <Messages commands={this.state.commands} messages={messages} markRead={this.markRead} markUnread={this.markUnread} removeLabels={this.removeLabels} applyLabels={this.applyLabels} selectAll={this.selectAll} deleteSelected={this.deleteSelected} countNumSelected={this.countNumSelected} selectStar={this.selectStar} selectCheck={this.selectCheck} updateMessages={this.updateMessages} />
         );
     }
 }
