@@ -37,9 +37,7 @@ class Toolbar extends React.Component {
 
     selectAll(e) {
         e.stopPropagation()
-        console.log('selectAll',e.target)
         const className = e.target.firstElementChild.className || ''
-        console.log('className',className)
         const star = className.indexOf('fa-square-o') > -1 ? true : false
         store.dispatch(selectAll(this.props.messages,star))
     }

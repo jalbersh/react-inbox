@@ -43,13 +43,11 @@ export function fetchMessagesInAPI() {
         dispatch({ type: API_FETCH_REQUEST_STARTED })
         let url = process.env.REACT_APP_API_URL || 'http://localhost:8082'
         url += '/api/messages'
-//        console.log('url',url)
         const response = await fetch(url)
         const json = await response.json()
         try {
             const embedded = json._embedded
             const messages = embedded.messages
-//            console.log('fetched',messages)
             dispatch({
                 type: API_FETCH_MESSAGES_SUCCESS,
                 messages: messages
@@ -62,7 +60,6 @@ export function fetchMessagesInAPI() {
 }
 
 export function updateMessagesInAPI(messages, command, value) {
-//        console.log('in action.updateMessagesInAPI with',messages,'and',value)
     return async (dispatch) => {
         dispatch({ type: API_UPDATE_REQUEST_STARTED })
         let base = process.env.REACT_APP_API_URL || 'http://localhost:8082'
@@ -86,7 +83,6 @@ export function updateMessagesInAPI(messages, command, value) {
             headers: { 'Content-Type': 'application/json' }
         })
         handleErrors(response)
-//        console.log('response from updateMessagesInAPI',response)
         dispatch(fetchMessagesInAPI())
         // if 200 returned, what about messages
     }
@@ -103,10 +99,8 @@ export function countNumSelected(messages) {
 }
 
 export function selectAll(messages,check) {
-    console.log('in selectAll with numSelected',countNumSelected(messages))
     return async (dispatch) => {
         const countSelected = messages ? countNumSelected(messages) : 0
-        console.log('countSelected',countSelected)
                 messages = messages.map(function(message) {
         console.log('inner countSelected',countSelected)
                     if (!check) {
@@ -119,8 +113,6 @@ export function selectAll(messages,check) {
                     dispatch(updateMessages (messages, message, check ? commands.SELECT : commands.UNSELECT))
                     return message
                 })
-       // need to do setState since selected is not part of the API, but for display purposes
-//        this.setState({messages: messages});
     }
 }
 
@@ -139,8 +131,6 @@ function unselectAll(messages) {
                     dispatch(updateMessages (messages, message, commands.UNSELECT))
                     return message
                 })
-       // need to do setState since selected is not part of the API, but for display purposes
-//        this.setState({messages: messages});
     }
 }
 
@@ -157,12 +147,10 @@ export function markRead(messages) {
              return message
         },this)
         unselectAll()
-//        console.log('exiting markRead')
     }
 }
 
 export function markUnread(messages) {
-//    console.log('in action markUnread',messages)
     return async (dispatch) => {
         messages.filter(function(message) {
              if (!!message.selected) {
@@ -174,7 +162,6 @@ export function markUnread(messages) {
              return message
         },this)
         unselectAll()
-//        console.log('exiting markUnread')
     }
 }
 
@@ -193,7 +180,6 @@ export function starMessage (messages,message,star) {
 }
 
 export function updateMessages (messages, message, command) {
-    console.log('in updateMessages action with',command,message,messages)
     return async (dispatch) => {
        let curMessages = messages
        let msgToFind = curMessages.find((msg) => {
@@ -219,22 +205,16 @@ export function updateMessages (messages, message, command) {
                   command !== commands.CHECK &&
                   command !== commands.UNCHECK)
        {
-            console.log('dispatching updateMessagesInAPI')
             dispatch(updateMessagesInAPI([message],command,message.starred))
        }
        dispatch({type: API_UPDATE_MESSAGES_SUCCESS, messages: newMessages})
-       // need to do setState since selected is not part of the API, but for display purposes
-       //this.setState({messages: newMessages})
     }
 }
 
 export function deleteSelected(messages) {
     return async (dispatch) => {
-        console.log('in deleteSelected with messages',messages)
         messages.filter(function( message ) {
-            console.log('in deleteSelected with message',message)
             if (!!message.selected) {
-                console.log('calling deleteById')
                 dispatch(updateMessagesInAPI([message],commands.DELETE))
                 return false
             }
