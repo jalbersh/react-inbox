@@ -1,27 +1,35 @@
 import React from 'react'
 import '../index.css'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import { checkMessage, starMessage, updateMessages } from '../Actions'
+import store from '../store'
 
 class Message extends React.Component {
     constructor(props) {
         super(props);
-        this.state={message: props.message}
-        this.checkMessage = this.checkMessage.bind(this)
-        this.starMessage = this.starMessage.bind(this)
+        this.state={messages: props.messages, message: props.message}
+        this.checkTheMessage = this.checkTheMessage.bind(this)
+        this.starTheMessage = this.starTheMessage.bind(this)
     }
 
-    checkMessage(e) {
+    checkTheMessage(e) {
         e.stopPropagation()
-        this.props.selectCheck(this.props.message)
+        const message = this.props.message
+        const current = message.selected ? true : false
+        const selected = !current
+        store.dispatch(checkMessage(this.props.messages,this.props.message,selected))
     }
 
-    starMessage (e) {
+    starTheMessage (e) {
         e.stopPropagation()
-        this.props.selectStar(this.props.message)
+        const className = e.target.className
+        const star = className.indexOf('fa-star-o') > -1 ? true : false
+        store.dispatch(starMessage(this.props.messages,this.props.message,star))
     }
 
     render() {
         const message = this.props.message
-//        console.log('in Message.render',message)
         const subject = message.subject
         const star = !!message.starred ? 'fa-star' : 'fa-star-o'
         const unread = !message.read ? 'unread' : 'read'
@@ -31,9 +39,9 @@ class Message extends React.Component {
                 <div className={`row ${unread} ${selected}`}>
                       <div className="col-xs-1">
                           <div className="col-xs-2">
-                              <input type="checkbox" checked={ !!message.selected } onChange={this.checkMessage}/>
+                              <input type="checkbox" checked={ !!message.selected } onChange={this.checkTheMessage}/>
                           </div>
-                          <div className="col-xs-2" onClick={this.starMessage}>
+                          <div className="col-xs-2" onClick={this.starTheMessage}>
                               <i className={`star fa ${star}`} ></i>
                           </div>
                       </div>
@@ -48,4 +56,19 @@ class Message extends React.Component {
     }
 }
 
-export default Message;
+export function mapStateToProps(state) {
+    return {messages: state.messages}
+}
+
+const mapDispatchToProps = dispatch => {
+        bindActionCreators(
+        {
+           starMessage,
+           updateMessages
+        }, dispatch)
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Message);

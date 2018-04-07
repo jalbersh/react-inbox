@@ -1,4 +1,11 @@
-describe('App', () => {
+import React from 'react';
+import {shallow, mount} from 'enzyme';
+import {assert} from 'chai';
+import {spy} from 'sinon';
+import App from '../App';
+
+describe("for the App", () => {
+
     beforeEach(() => {
     })
 
@@ -19,21 +26,32 @@ describe('App', () => {
             messages: messages
         }
 
-        const {output} = renderComponent(
+        const {output} = shallow(
             <App {...properties}/>
-        )
+        ).dive()
 
         return {
             output,
             dispatchSpy
         }
     }
+//
+//  describe('Check functionality', function() {
+//    it('does something', function() {
+//       expect(new App().toEqual(0));
+//    });
+//  });
 
-    describe('#componentDidMount', () => {
+  it("confirms button", () => {
+        const wrapper = shallow(<App />);
+        expect(wrapper.find('button').text()).toEqual('Mark As Read');
+  });
+
+   describe('#componentDidMount', () => {
         it('dispatches action creators on page load', () => {
             const {dispatchSpy} = renderApp()
 
             expect(dispatchSpy).toHaveBeenCalled()
-        }}
-   })
-}
+        })
+    })
+})

@@ -3,6 +3,7 @@ import '../index.css'
 import Message from '../components/Message';
 import AddMessage from '../components/AddMessage';
 import Toolbar from '../components/Toolbar'
+import { connect } from 'react-redux'
 
 class Messages extends React.Component {
     constructor(props) {
@@ -14,16 +15,23 @@ class Messages extends React.Component {
         const messages = this.props.messages
         return (
             <div className="container">
-                <Toolbar commands={this.state.commands} messages={messages} markRead={this.props.markRead} markUnread={this.props.markUnread} countNumSelected={this.props.countNumSelected} applyLabels={this.props.applyLabels} removeLabels={this.props.removeLabels} selectAll={this.props.selectAll} deleteSelected={this.props.deleteSelected} updateMessages={ this.props.updateMessages } />
+                <Toolbar />
                     {
-                        messages && messages.length>0 ? messages.map( (msg, index) => <Message key={ index } message={ msg } updateMessages={ this.props.updateMessages } selectStar={this.props.selectStar} selectCheck={this.props.selectCheck} /> ) : <div>no messages</div>
+                        messages && messages.length>0 ? messages.map( (msg, index) => <Message key={ index } message={ msg } /> ) : <div>no messages</div>
                     }
               <br />
               <br />
-              <AddMessage commands={this.state.commands} messages={messages} onSubmit={ this.props.updateMessages } />
+              <AddMessage commands={this.state.commands} messages={messages} />
             </div>
         )
     }
 }
 
-export default Messages;
+export function mapStateToProps(state) {
+    return {messages: state.messages}
+}
+
+export default connect(
+  mapStateToProps,
+  null
+)(Messages);

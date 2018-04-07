@@ -1,18 +1,23 @@
 import {API_ADD_REQUEST_STARTED,
         API_FETCH_REQUEST_STARTED,
         API_FETCH_MESSAGES_SUCCESS,
-        API_UPDATE_REQUEST_STARTED
+        API_UPDATE_REQUEST_STARTED,
+        API_UPDATE_MESSAGES_SUCCESS
         } from '../Utils/actionTypes'
 import commands from '../commands'
 
+function handleErrors(response) {
+    if (!response.ok) {
+        throw Error(response.statusText);
+    }
+    return response;
+}
+
 export function addMessageInAPI(message) {
-        console.log('in action.addMessageInAPI with',message)
     return async (dispatch) => {
         dispatch({ type: API_ADD_REQUEST_STARTED })
-        console.log('action.addMessageInAPI, from env, url',process.env.REACT_APP_API_URL)
         let url = process.env.REACT_APP_API_URL || 'http://localhost:8082'
         url += '/api/messages'
-        console.log('built url',url)
         const response = await fetch(url, {
           method: 'POST',
           body: JSON.stringify(message),
@@ -21,32 +26,34 @@ export function addMessageInAPI(message) {
             'Accept': 'application/json',
           }
        })
-       console.log('response from addMessageInAPI',response)
+       handleErrors(response)
        dispatch(fetchMessagesInAPI())
-//       dispatch({
-//           type: API_ADD_MESSAGE_SUCCESS
-//            ,someObject: 'someState'
-//       })
     }
 }
 
+//function convertAPItoDisplay(messages) {
+//   console.log('in convertAPItoDisplay')
+//   return !messages ? [] : messages.map((message) => {
+//        return {...message,selected:false,checked:'off'}
+//   })
+//}
+//
 export function fetchMessagesInAPI() {
-        console.log('action.fetchMessagesInAPI,from env, url',process.env.REACT_APP_API_URL)
     return async (dispatch) => {
         dispatch({ type: API_FETCH_REQUEST_STARTED })
         let url = process.env.REACT_APP_API_URL || 'http://localhost:8082'
         url += '/api/messages'
+//        console.log('url',url)
         const response = await fetch(url)
         const json = await response.json()
         try {
             const embedded = json._embedded
             const messages = embedded.messages
+//            console.log('fetched',messages)
             dispatch({
                 type: API_FETCH_MESSAGES_SUCCESS,
                 messages: messages
             })
-            //return this.convertAPItoDisplay(messages)
-            //this.setState({messages: messages});
         } catch (Exception) {
             console.log('unable to fetchMessagesInAPI')
             return []
@@ -55,14 +62,12 @@ export function fetchMessagesInAPI() {
 }
 
 export function updateMessagesInAPI(messages, command, value) {
-        console.log('in action.updateMessagesInAPI with',messages,'and',value)
+//        console.log('in action.updateMessagesInAPI with',messages,'and',value)
     return async (dispatch) => {
         dispatch({ type: API_UPDATE_REQUEST_STARTED })
-//        console.log('src/Actions/updateMessages.js, from env, url',process.env.REACT_APP_API_URL)
         let base = process.env.REACT_APP_API_URL || 'http://localhost:8082'
         let url = base + '/api/messages'
         const message = messages[0]
-//        console.log('message',message)
         let body = {}
         switch(command) {
             case commands.DELETE:     body = {messageIds: [message.id], command: command }; break;
@@ -73,23 +78,203 @@ export function updateMessagesInAPI(messages, command, value) {
             case commands.REMOVELABEL:if (!value) {return} else {body = {messageIds: [message.id], command: command, label:value}; break;}
             default: return
         }
-//        console.log('body',body)
-//        console.log('built url',url)
         const sbody = JSON.stringify(body)
-//        console.log('sbody',sbody)
         const response = await fetch(url,
         {
             method: 'PATCH',
             body: sbody,
             headers: { 'Content-Type': 'application/json' }
         })
-        console.log('response from updateMessagesInAPI',response)
+        handleErrors(response)
+//        console.log('response from updateMessagesInAPI',response)
         dispatch(fetchMessagesInAPI())
         // if 200 returned, what about messages
-//        dispatch({
-//            type: API_UPDATE_MESSAGES_SUCCESS
-//            ,someObject: 'someState'
-////            ,messages: messages
-//        })
+    }
+}
+
+export function countNumSelected(messages) {
+    return async (dispatch) => {
+//        console.log('in action.countNumSelected')
+        var count = messages && messages.length>0 ? messages.reduce(function(count, message) {
+            return !!message.selected ? count+1 : count
+        }, 0) : 0
+        return count
+    }
+}
+
+export function selectAll(messages,check) {
+    console.log('in selectAll with numSelected',countNumSelected(messages))
+    return async (dispatch) => {
+        const countSelected = messages ? countNumSelected(messages) : 0
+        console.log('countSelected',countSelected)
+                messages = messages.map(function(message) {
+        console.log('inner countSelected',countSelected)
+                    if (!check) {
+                        message.selected = false
+                        message.checked = 'off'
+                    } else {
+                        message.selected = true
+                        message.checked = 'on'
+                    }
+                    dispatch(updateMessages (messages, message, check ? commands.SELECT : commands.UNSELECT))
+                    return message
+                })
+       // need to do setState since selected is not part of the API, but for display purposes
+//        this.setState({messages: messages});
+    }
+}
+
+function unselectAll(messages) {
+    console.log('in unselectAll with numSelected',countNumSelected(messages))
+    return async (dispatch) => {
+        const countSelected = messages ? countNumSelected(messages) : 0
+                messages = messages.map(function(message) {
+                    if (countSelected > 0) {
+                        message.selected = false
+                        message.checked = 'off'
+                    } else {
+                        message.selected = true
+                        message.checked = 'on'
+                    }
+                    dispatch(updateMessages (messages, message, commands.UNSELECT))
+                    return message
+                })
+       // need to do setState since selected is not part of the API, but for display purposes
+//        this.setState({messages: messages});
+    }
+}
+
+export function markRead(messages) {
+    console.log('in action markRead',messages)
+    return async (dispatch) => {
+        messages.filter(function(message) {
+             if (!!message.selected) {
+                 message.read = true
+                 dispatch(updateMessagesInAPI([message],commands.READ))
+                 message.selected = false
+                 dispatch(updateMessages (messages, message, commands.UNSELECT))
+             }
+             return message
+        },this)
+        unselectAll()
+//        console.log('exiting markRead')
+    }
+}
+
+export function markUnread(messages) {
+//    console.log('in action markUnread',messages)
+    return async (dispatch) => {
+        messages.filter(function(message) {
+             if (!!message.selected) {
+                 message.read = false
+                 dispatch(updateMessagesInAPI([message],commands.UNREAD))
+                 message.selected = false
+                 dispatch(updateMessages (messages, message, commands.UNSELECT))
+             }
+             return message
+        },this)
+        unselectAll()
+//        console.log('exiting markUnread')
+    }
+}
+
+export function checkMessage(messages,message,selected) {
+    return async (dispatch) => {
+        message.selected = selected
+        dispatch(updateMessages(messages,message,!!selected ? commands.SELECT : commands.UNSELECT))
+    }
+}
+
+export function starMessage (messages,message,star) {
+    return async (dispatch) => {
+        message.starred = star
+        dispatch(updateMessages(messages,message,commands.STAR))
+    }
+}
+
+export function updateMessages (messages, message, command) {
+    console.log('in updateMessages action with',command,message,messages)
+    return async (dispatch) => {
+       let curMessages = messages
+       let msgToFind = curMessages.find((msg) => {
+           return msg === message
+       })
+       let newMessages = []
+       if (msgToFind) {
+           let msgIndex = curMessages.indexOf(msgToFind)
+           newMessages = [
+                ...curMessages.slice(0, msgIndex),
+                message,
+                ...curMessages.slice(msgIndex + 1)
+           ]
+       } else {
+           newMessages = [
+                ...curMessages, message
+           ]
+       }
+       if (command === commands.ADD) {
+            dispatch(addMessageInAPI(message))
+       } else if (command !== commands.SELECT &&
+                  command !== commands.UNSELECT &&
+                  command !== commands.CHECK &&
+                  command !== commands.UNCHECK)
+       {
+            console.log('dispatching updateMessagesInAPI')
+            dispatch(updateMessagesInAPI([message],command,message.starred))
+       }
+       dispatch({type: API_UPDATE_MESSAGES_SUCCESS, messages: newMessages})
+       // need to do setState since selected is not part of the API, but for display purposes
+       //this.setState({messages: newMessages})
+    }
+}
+
+export function deleteSelected(messages) {
+    return async (dispatch) => {
+        console.log('in deleteSelected with messages',messages)
+        messages.filter(function( message ) {
+            console.log('in deleteSelected with message',message)
+            if (!!message.selected) {
+                console.log('calling deleteById')
+                dispatch(updateMessagesInAPI([message],commands.DELETE))
+                return false
+            }
+            return true
+
+        }, this)
+    }
+}
+
+export function removeLabels(messages,label) {
+    return async (dispatch) => {
+        messages.map(function(message) {
+                    if (message.selected === true) {
+                        let labels = message.labels
+                        if (labels && labels.length>0) {
+                            let newLabels = []
+                            let lblIndex = labels.indexOf(label)
+                            if (lblIndex !== -1) {
+                               newLabels = [
+                                    ...labels.slice(0, lblIndex),
+                                    ...labels.slice(lblIndex + 1)
+                               ]
+                               message.labels = newLabels
+                            }
+                        }
+                        dispatch(updateMessagesInAPI([message],commands.REMOVELABEL,label))
+                    }
+                    return message
+                },this)
+    }
+}
+
+export function applyLabels(messages, label) {
+    return async (dispatch) => {
+        messages.map(function(message) {
+                    if (message.selected === true) {
+                        message.labels.push(label)
+                        dispatch(updateMessagesInAPI([message],commands.ADDLABEL,label))
+                    }
+                    return message
+                },this)
     }
 }

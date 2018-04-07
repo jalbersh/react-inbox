@@ -11,7 +11,7 @@ const initialState = {
 }
 
 export default (state = initialState, action) => {
-//  console.log('in Reducers.messages with type',action ? action.type : 'no action',' and state',state)
+  console.log('in Reducers.messages with type',action ? action.type : 'no action',' and state',action)
   if (!action) {
         console.log('No action, returning default state')
         return state

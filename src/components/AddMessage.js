@@ -1,6 +1,8 @@
 import React from 'react'
 import '../index.css'
 import commands from '../commands'
+import { updateMessages } from '../Actions'
+import store from '../store'
 
 class AddMessage extends React.Component {
 
@@ -23,7 +25,7 @@ class AddMessage extends React.Component {
                           'starred': false,
                           'subject': subject,
                           'body': body }
-        this.props.onSubmit(message,commands.ADD)
+        store.dispatch(updateMessages (this.props.messages, message, commands.ADD))
    }
 
   render() {
