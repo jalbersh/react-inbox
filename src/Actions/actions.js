@@ -1,10 +1,14 @@
-import {API_ADD_REQUEST_STARTED,
+import {
         API_FETCH_REQUEST_STARTED,
         API_FETCH_MESSAGES_SUCCESS,
         API_UPDATE_REQUEST_STARTED,
-        API_UPDATE_MESSAGES_SUCCESS
+        API_UPDATE_MESSAGES_SUCCESS,
+        SELECT_ALL_SUCCESS,
+        REMOVE_LABEL_STARTED,
+        UPDATE_REQUEST_STARTED
         } from '../Utils/actionTypes'
 import commands from '../commands'
+import store from '../store';
 
 function handleErrors(response) {
     if (!response.ok) {
@@ -13,9 +17,9 @@ function handleErrors(response) {
     return response;
 }
 
-export function addMessageInAPI(message) {
+export function addMessageInAPI(message=store.getState().message) {
+    if (!message) return;
     return async (dispatch) => {
-        dispatch({ type: API_ADD_REQUEST_STARTED })
         let url = process.env.REACT_APP_API_URL || 'http://localhost:8082'
         url += '/api/messages'
         const response = await fetch(url, {
@@ -31,13 +35,6 @@ export function addMessageInAPI(message) {
     }
 }
 
-//function convertAPItoDisplay(messages) {
-//   console.log('in convertAPItoDisplay')
-//   return !messages ? [] : messages.map((message) => {
-//        return {...message,selected:false,checked:'off'}
-//   })
-//}
-//
 export function fetchMessagesInAPI() {
     return async (dispatch) => {
         dispatch({ type: API_FETCH_REQUEST_STARTED })
@@ -59,12 +56,7 @@ export function fetchMessagesInAPI() {
     }
 }
 
-export function updateMessagesInAPI(messages, command, value) {
-    return async (dispatch) => {
-        dispatch({ type: API_UPDATE_REQUEST_STARTED })
-        let base = process.env.REACT_APP_API_URL || 'http://localhost:8082'
-        let url = base + '/api/messages'
-        const message = messages[0]
+function prepareBody(message, command, value) {
         let body = {}
         switch(command) {
             case commands.DELETE:     body = {messageIds: [message.id], command: command }; break;
@@ -75,6 +67,16 @@ export function updateMessagesInAPI(messages, command, value) {
             case commands.REMOVELABEL:if (!value) {return} else {body = {messageIds: [message.id], command: command, label:value}; break;}
             default: return
         }
+        return body
+}
+
+export function updateMessagesInAPI(messages, command, value) {
+    return async (dispatch) => {
+        dispatch({ type: API_UPDATE_REQUEST_STARTED })
+        let base = process.env.REACT_APP_API_URL || 'http://localhost:8082'
+        let url = base + '/api/messages'
+        const message = messages[0]
+        const body = prepareBody(message, command, value)
         const sbody = JSON.stringify(body)
         const response = await fetch(url,
         {
@@ -84,58 +86,23 @@ export function updateMessagesInAPI(messages, command, value) {
         })
         handleErrors(response)
         dispatch(fetchMessagesInAPI())
-        // if 200 returned, what about messages
     }
 }
 
 export function countNumSelected(messages) {
-    return async (dispatch) => {
-//        console.log('in action.countNumSelected')
         var count = messages && messages.length>0 ? messages.reduce(function(count, message) {
             return !!message.selected ? count+1 : count
         }, 0) : 0
         return count
-    }
 }
 
-export function selectAll(messages,check) {
+export function selectAll(messages=store.getState().messages) {
     return async (dispatch) => {
-        const countSelected = messages ? countNumSelected(messages) : 0
-                messages = messages.map(function(message) {
-        console.log('inner countSelected',countSelected)
-                    if (!check) {
-                        message.selected = false
-                        message.checked = 'off'
-                    } else {
-                        message.selected = true
-                        message.checked = 'on'
-                    }
-                    dispatch(updateMessages (messages, message, check ? commands.SELECT : commands.UNSELECT))
-                    return message
-                })
-    }
-}
-
-function unselectAll(messages) {
-    console.log('in unselectAll with numSelected',countNumSelected(messages))
-    return async (dispatch) => {
-        const countSelected = messages ? countNumSelected(messages) : 0
-                messages = messages.map(function(message) {
-                    if (countSelected > 0) {
-                        message.selected = false
-                        message.checked = 'off'
-                    } else {
-                        message.selected = true
-                        message.checked = 'on'
-                    }
-                    dispatch(updateMessages (messages, message, commands.UNSELECT))
-                    return message
-                })
+       dispatch({type: SELECT_ALL_SUCCESS, messages})
     }
 }
 
 export function markRead(messages) {
-    console.log('in action markRead',messages)
     return async (dispatch) => {
         messages.filter(function(message) {
              if (!!message.selected) {
@@ -146,7 +113,6 @@ export function markRead(messages) {
              }
              return message
         },this)
-        unselectAll()
     }
 }
 
@@ -161,7 +127,6 @@ export function markUnread(messages) {
              }
              return message
         },this)
-        unselectAll()
     }
 }
 
@@ -181,23 +146,7 @@ export function starMessage (messages,message,star) {
 
 export function updateMessages (messages, message, command) {
     return async (dispatch) => {
-       let curMessages = messages
-       let msgToFind = curMessages.find((msg) => {
-           return msg === message
-       })
-       let newMessages = []
-       if (msgToFind) {
-           let msgIndex = curMessages.indexOf(msgToFind)
-           newMessages = [
-                ...curMessages.slice(0, msgIndex),
-                message,
-                ...curMessages.slice(msgIndex + 1)
-           ]
-       } else {
-           newMessages = [
-                ...curMessages, message
-           ]
-       }
+       dispatch({type: UPDATE_REQUEST_STARTED, messages, message})
        if (command === commands.ADD) {
             dispatch(addMessageInAPI(message))
        } else if (command !== commands.SELECT &&
@@ -207,7 +156,7 @@ export function updateMessages (messages, message, command) {
        {
             dispatch(updateMessagesInAPI([message],command,message.starred))
        }
-       dispatch({type: API_UPDATE_MESSAGES_SUCCESS, messages: newMessages})
+       dispatch({type: API_UPDATE_MESSAGES_SUCCESS, messages: store.getState().messages})
     }
 }
 
@@ -228,19 +177,8 @@ export function removeLabels(messages,label) {
     return async (dispatch) => {
         messages.map(function(message) {
                     if (message.selected === true) {
-                        let labels = message.labels
-                        if (labels && labels.length>0) {
-                            let newLabels = []
-                            let lblIndex = labels.indexOf(label)
-                            if (lblIndex !== -1) {
-                               newLabels = [
-                                    ...labels.slice(0, lblIndex),
-                                    ...labels.slice(lblIndex + 1)
-                               ]
-                               message.labels = newLabels
-                            }
-                        }
-                        dispatch(updateMessagesInAPI([message],commands.REMOVELABEL,label))
+                        dispatch({type:REMOVE_LABEL_STARTED, message: message, label: label})
+                        dispatch(updateMessagesInAPI([store.getState().message],commands.REMOVELABEL,label))
                     }
                     return message
                 },this)

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { fetchMessagesInAPI } from './Actions'
+import { fetchMessagesInAPI } from './Actions/actions'
 import './App.css';
 import Messages from './components/Messages'
 import store from './store'

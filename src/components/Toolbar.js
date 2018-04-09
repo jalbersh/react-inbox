@@ -2,14 +2,14 @@ import React from 'react'
 import '../index.css'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { applyLabels, deleteSelected, markRead, markUnread, selectAll, removeLabels } from '../Actions'
+import { applyLabels, deleteSelected, markRead, markUnread, selectAll, removeLabels, countNumSelected } from '../Actions/actions'
+import {SELECT_ALL_STARTED} from '../Utils/actionTypes'
 import store from '../store'
 
 class Toolbar extends React.Component {
     constructor(props) {
         super(props);
         this.state={messages: this.props.messages}
-        this.countNumSelected = this.countNumSelected.bind(this)
         this.countUnread = this.countUnread.bind(this)
         this.markAsRead = this.markAsRead.bind(this)
         this.markAsUnread = this.markAsUnread.bind(this)
@@ -39,14 +39,8 @@ class Toolbar extends React.Component {
         e.stopPropagation()
         const className = e.target.firstElementChild.className || ''
         const star = className.indexOf('fa-square-o') > -1 ? true : false
-        store.dispatch(selectAll(this.props.messages,star))
-    }
-
-    countNumSelected(messages) {
-        var count = messages && messages.length>0 ? messages.reduce(function(count, message) {
-            return !!message.selected ? count+1 : count
-        }, 0) : 0
-        return count
+        store.dispatch({type: SELECT_ALL_STARTED, select: star, messages: this.props.messages})
+        store.dispatch(selectAll())
     }
 
     countUnread(messages) {
@@ -70,7 +64,7 @@ class Toolbar extends React.Component {
 
     render() {
         const messages = this.props.messages
-        const countSelected = this.countNumSelected(messages)
+        const countSelected = countNumSelected(messages)
         const countUnread = this.countUnread(messages)
         const countMessages = messages ? messages.length : 0
         const square = countSelected === countMessages && countSelected > 0 ? 'fa-check-square-o' : 'fa-square-o'

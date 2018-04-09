@@ -1,14 +1,16 @@
 import React from 'react'
 import '../index.css'
-import commands from '../commands'
-import { updateMessages } from '../Actions'
+import { addMessageInAPI } from '../Actions/actions'
 import store from '../store'
+import {API_ADD_REQUEST_STARTED} from '../Utils/actionTypes'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 
 class AddMessage extends React.Component {
 
   constructor(props) {
     super(props)
-    this.state={messages: this.props.messages}
+    this.state={messages: this.props.messages, message: this.props.message}
     this.submitHandler = this.submitHandler.bind(this)
   }
 
@@ -18,14 +20,8 @@ class AddMessage extends React.Component {
         const body = target.body.value
         const subject = target.subject.value
         e.target.reset()
-        const message = { 'labels': [],
-                          'checked': 'off',
-                          'selected': false,
-                          'read': false,
-                          'starred': false,
-                          'subject': subject,
-                          'body': body }
-        store.dispatch(updateMessages (this.props.messages, message, commands.ADD))
+        store.dispatch({type:API_ADD_REQUEST_STARTED, partial: {'subject': subject,'body': body}})
+        store.dispatch(addMessageInAPI())
    }
 
   render() {
@@ -57,5 +53,21 @@ class AddMessage extends React.Component {
 
 }
 
-export default AddMessage;
+function mapStateToProps(state) {
+    return {messages: state.messages, message: state.message}
+}
+
+const mapDispatchToProps = dispatch => {
+        bindActionCreators(
+        {
+           addMessageInAPI
+        }, dispatch)
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(AddMessage);
+
+//export default AddMessage;
 

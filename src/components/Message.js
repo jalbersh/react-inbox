@@ -2,7 +2,7 @@ import React from 'react'
 import '../index.css'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { checkMessage, starMessage, updateMessages } from '../Actions'
+import { checkMessage, starMessage } from '../Actions/actions'
 import store from '../store'
 
 class Message extends React.Component {
@@ -60,11 +60,11 @@ export function mapStateToProps(state) {
     return {messages: state.messages}
 }
 
-const mapDispatchToProps = dispatch => {
+export const mapDispatchToProps = dispatch => {
         bindActionCreators(
         {
            starMessage,
-           updateMessages
+           checkMessage
         }, dispatch)
 }
 
